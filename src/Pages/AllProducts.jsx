@@ -2,15 +2,21 @@
 import useAxios from "../Hooks/useAxios"
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, Navigate } from "react-router-dom";
 import { PRODUCTS_BASE_URL } from "../constants/url.constant";
 import Product from "../Components/Product";
+import { Box, Button, Container, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import NotFoundPage from "./NotFoundPage";
 
 function AllProducts() {
   const [products, setProducts] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [notFound, setNotFound] = useState(false);
 
    useEffect(() => {
     async function getProducts() {
@@ -31,15 +37,19 @@ function AllProducts() {
       try {
         const response = await axios.get(PRODUCTS_BASE_URL, options);
         const { products, total, page, pages } = response.data;
-        setProducts(products);
-        setTotalPages(pages);
-        setCurrentPage(page);
+        if (products.length === 0) {
+          setNotFound(true); // Set notFound to true if no products found
+        } else {
+          setProducts(products);
+          setTotalPages(pages);
+          setCurrentPage(page);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     }
     getProducts();
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
 
   function handleFilterChange(ev) {
     const inputName = ev.target.name;
@@ -64,81 +74,123 @@ function AllProducts() {
 
   if(products.length === 0) return;
 
+  if (notFound) {
+    return <Navigate to="/404" />;
+  }
+
   return (
     <>
-      <Link to="create">Create product</Link>
-      <div className="my-8 space-y-2">
-        <div>
-          <div>
-            <label htmlFor="isSomthing">Page: </label>
-            <input
-              className="outline outline-sky-500"
-              min={1}
-              id="page"
-              name="page"
-              type="number"
-              value={searchParams.get("page") || "1"}
-              onChange={handlePagination}
-            />
-          </div>
-          <label htmlFor="inStock">In stock: </label>
-          <input
-            className="outline outline-sky-500"
-            id="inStock"
-            name="inStock"
-            type="checkbox"
-            checked={searchParams.get("inStock") === "true" || false}
-            onChange={handleFilterChange}
+      <Box sx={{ p: 3 }}>
+      <Button 
+        component={Link} 
+        to="create" 
+        variant="contained" 
+        color="primary" 
+        sx={{ mb: 2 }}
+      >
+        Create Product
+      </Button>
+      <Box sx={{ my: 1, spaceY: 2 }}>
+        <Typography variant="h6" gutterBottom>
+          Filter Products
+        </Typography>
+        <Box>
+          <TextField
+            label="Page"
+            type="number"
+            inputProps={{ min: 1 }}
+            value={searchParams.get("page") || "1"}
+            onChange={handlePagination}
+            variant="outlined"
+            sx={{ mb: 2 }}
           />
-        </div>
-        <div>
-          <label htmlFor="name">Name: </label>
-          <input
-            className="outline outline-sky-500"
-            id="name"
-            name="name"
+        </Box>
+        <Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={searchParams.get("inStock") === "true" || false}
+                onChange={handleFilterChange}
+                name="inStock"
+                color="primary"
+              />
+            }
+            label="In Stock"
+          />
+        </Box>
+        <Box>
+          <TextField
+            label="Name"
             type="text"
+            name="name"
             value={searchParams.get("name") || ""}
             onChange={handleFilterChange}
+            variant="outlined"
+            sx={{ mb: 2, width: '100%' }}
           />
-        </div>
-        <div>
-          <label htmlFor="minPrice">minPrice: </label>
-          <input
-            className="outline outline-sky-500"
-            id="minPrice"
-            name="minPrice"
+        </Box>
+        <Box>
+          <TextField
+            label="Min Price"
             type="number"
+            name="minPrice"
             value={searchParams.get("minPrice") || 0}
             onChange={handleFilterChange}
+            variant="outlined"
+            sx={{ mb: 2, width: '100%' }}
           />
-        </div>
-        <div>
-          <label htmlFor="maxPrice">maxPrice: </label>
-          <input
-            className="outline outline-sky-500"
-            id="maxPrice"
-            name="maxPrice"
+        </Box>
+        <Box>
+          <TextField
+            label="Max Price"
             type="number"
+            name="maxPrice"
             value={searchParams.get("maxPrice") || Number.MAX_SAFE_INTEGER}
             onChange={handleFilterChange}
+            variant="outlined"
+            sx={{ width: '100%' }}
           />
-        </div>
-      </div>
-      <div className="flex flex-col gap-4">
-        {products.map((product) => {
-          return (
-            <Link to={`${product._id}`} key={product._id}>
-              <div className="bg-gray-300 p-4">
-                <h4>{product.name}</h4>
-                <p>{product.price}</p>
-                <p>{product.category}</p>
-                <p>{product.quantity > 0 ? "In Stock" : "Out of Stock"}</p>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+        </Box>
+      </Box>
+    </Box>
+      <Container maxWidth="lg" sx={{ py: 6 }}>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Featured Products
+        </Typography>
+        <Grid container spacing={4}>
+          {products.map((product) => (
+            <Grid item key={product.id} xs={12} sm={6} md={4}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  src={'https://i0.wp.com/ten-low.co.il/wp-content/uploads/2024/01/HP_LAPTOP_I7_ON_SALE.jpg?fit=1000%2C1000&ssl=1'} // Use a default image if product.image is not available
+                  alt={product.name}
+                />
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {product.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.category}
+                  </Typography>
+                  <Typography variant="h6" component="div" sx={{ mt: 2 }}>
+                    ${product.price}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" color="primary" component={Link} to={`/products/${product._id}`}>
+                    View Details
+                  </Button>
+                  <Button size="small" color="secondary">
+                    Add to Cart
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
       <div>
         {Array.from({ length: totalPages }, (_, index) => (
           <button

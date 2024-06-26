@@ -1,23 +1,14 @@
-.homepage {
-    text-align: center;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-}
-
-.homepage-header {
-    background-color: #282c34;
-    padding: 20px;
-    color: white;
-}
-
-.homepage-content {
-    margin: 20px auto;
-    max-width: 600px;
-    text-align: left;
-    color: #333;
-}
-
-.homepage-content p {
-    margin: 10px 0;
-    line-height: 1.6;
-}
+html, body, #root {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+  }

@@ -7,17 +7,16 @@ import useAxios from "../Hooks/useAxios";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import CardComponent from './CardComponent';
 
 export default function Product(props) {
-  const { name, price, category} = props;
+  const { name, price, category, quantity} = props;
   const {productId} = useParams(); 
   const URL = `http://localhost:3000/api/products/${productId}`
   const { data, error, loading } = useAxios(URL);
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: "", price: "", category: "" });
+  const [editData, setEditData] = useState({ name: "", price: "", category: "" , quantity: ""});
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -46,7 +45,8 @@ export default function Product(props) {
     setEditData({
       name: data.name,
       price: data.price,
-      category: data.category
+      category: data.category,
+      quantity: data.quantity
     });
   };
 
@@ -79,12 +79,11 @@ export default function Product(props) {
       <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
         {!isEditing ? (
           <>
-          <CardComponent imgAlt={data.name} imgSrc={data.name} title={data.name} rating={data.category} price={data.price}/>
-            <h1>Product Details</h1>
+            <h1>{data.name}</h1>
             <p>ID: {data._id}</p>
-            <p>Name: {data.name}</p>
-            <p>Price: {data.price}</p>
+            <p>Price: ${data.price}</p>
             <p>Category: {data.category}</p>
+            <p>Quantity: {data.quantity}</p>
             <Button onClick={handleEdit} variant="contained" style={{ margin: '5px'}}>Edit</Button>
             <Button onClick={handleDelete} variant="outlined" color="error" style={{ margin: '5px'}}>Delete</Button>
           </>
@@ -119,6 +118,17 @@ export default function Product(props) {
                 type="text"
                 name="category"
                 value={editData.category}
+                onChange={handleEditChange}
+                required
+              />
+            </label>
+            <br />
+            <label>
+              Quantity:
+              <input
+                type="text"
+                name="quantity"
+                value={editData.quantity}
                 onChange={handleEditChange}
                 required
               />

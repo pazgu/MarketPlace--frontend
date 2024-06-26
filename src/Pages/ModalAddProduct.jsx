@@ -29,7 +29,7 @@ function ModalAddTodo() {
             p: 4,
           }}
         >
-          <Outlet />
+        <Outlet />
         </Box>
       </Modal>
     );

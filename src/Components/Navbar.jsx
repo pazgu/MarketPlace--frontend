@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -21,13 +22,16 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{backgroundColor: '#013A69'}}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
             My Marketplace
           </Link>
         </Typography>
+        <IconButton color="inherit" component={Link} to="/myProducts">
+          <ShoppingCartIcon />
+        </IconButton>
         <div>
           <IconButton
             size="large"

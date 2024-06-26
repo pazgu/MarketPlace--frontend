@@ -1,8 +1,13 @@
 import { useState } from "react";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
 const LoginPage = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -10,7 +15,15 @@ const LoginPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Form submitted with data:", formData);
+    try {
+      setLoading(true);
+      console.log("Form submitted with data:", formData);
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (event) => {
@@ -22,34 +35,59 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <Box
+      sx={{
+        maxWidth: 400,
+        margin: "auto",
+        padding: 3,
+        boxShadow: 3,
+        borderRadius: 2,
+        backgroundColor: "#fff",
+        marginTop: 3,
+      }}
+    >
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
+        <Typography variant="h4" component="h2" align="center" gutterBottom>
+          Login
+        </Typography>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Username"
             id="username"
             name="username"
             value={formData.username}
             onChange={handleChange}
             required
+            disabled={loading}
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
+        </Box>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            variant="outlined"
             type="password"
+            label="Password"
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             required
+            disabled={loading}
           />
-        </div>
-        <Button variant="contained" endIcon={<SendIcon />}>Login</Button>
+        </Box>
+        <Button
+          fullWidth
+          type="submit"
+          variant="contained"
+          endIcon={loading ? <CircularProgress size={20} /> : <SendIcon />}
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </Button>
       </form>
-    </div>
+    </Box>
   );
 };
 
