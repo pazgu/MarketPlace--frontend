@@ -6,9 +6,11 @@ import axios from 'axios';
 import useAxios from "../Hooks/useAxios";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import CardComponent from './CardComponent';
 
 export default function Product(props) {
-  const {_id, name, price, category} = props;
+  const { name, price, category} = props;
   const {productId} = useParams(); 
   const URL = `http://localhost:3000/api/products/${productId}`
   const { data, error, loading } = useAxios(URL);
@@ -77,13 +79,14 @@ export default function Product(props) {
       <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
         {!isEditing ? (
           <>
+          <CardComponent imgAlt={data.name} imgSrc={data.name} title={data.name} rating={data.category} price={data.price}/>
             <h1>Product Details</h1>
             <p>ID: {data._id}</p>
             <p>Name: {data.name}</p>
             <p>Price: {data.price}</p>
             <p>Category: {data.category}</p>
-            <button onClick={handleEdit} style={{ margin: '5px' }}>Edit</button>
-            <button onClick={handleDelete} style={{ margin: '5px', color: 'red' }}>Delete</button>
+            <Button onClick={handleEdit} variant="contained" style={{ margin: '5px'}}>Edit</Button>
+            <Button onClick={handleDelete} variant="outlined" color="error" style={{ margin: '5px'}}>Delete</Button>
           </>
         ) : (
           <form onSubmit={handleEditSubmit}>
@@ -121,8 +124,8 @@ export default function Product(props) {
               />
             </label>
             <br />
-            <button type="submit" style={{ margin: '5px' }}>Save</button>
-            <button type="button" onClick={handleCancelEdit} style={{ margin: '5px' }}>Cancel</button>
+            <Button type="submit" variant="contained" color="success" style={{ margin: '5px'}}>Save</Button>
+            <Button variant="outlined" color="error" onClick={handleCancelEdit} style={{ margin: '5px' }}>Cancel</Button>
           </form>
         )}
       </div>

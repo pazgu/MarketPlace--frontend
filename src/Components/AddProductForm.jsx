@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 function AddProductForm() {
     const [newProductName, setNewProductName] = useState("");
     const [newProductPrice, setNewProductPrice] = useState("");
+    const [newProductQuantity, setNewProductQuantity] = useState(1);
     const [newProductCategory, setnewProductCategory] = useState("");
     const [loading, setLoading] = useState(false);
     const navigateBack = useNavigate();
@@ -31,19 +32,21 @@ function AddProductForm() {
       } 
 
     async function createNewProduct (ev) {
-      if (newProductName !== "" && newProductPrice!== "" && newProductCategory !== ""){
+      if (newProductName !== "" && newProductPrice!== "" && newProductCategory !== "" && newProductQuantity >= 1){
         ev.preventDefault();
         try {
           const newProduct = {
             _id: makeId(5),
             name: newProductName,
             price: newProductPrice,
+            quantity: newProductQuantity,
             category: newProductCategory,
           };
           setLoading(true);
           await axios.post("http://localhost:3000/api/products", newProduct);
           setNewProductName("");
           setNewProductPrice("");
+          setNewProductQuantity(1);
           setnewProductCategory("");
           goBack();
         } catch (error) {
@@ -82,9 +85,20 @@ function AddProductForm() {
           />
           <TextField 
             label="Add price..."
+            type="number"
             id="fullWidth"
             value={newProductPrice} 
             onChange={(ev) => setNewProductPrice(ev.target.value)} 
+            sx={{ flex: 1 }} 
+            fullWidth
+            required
+          />
+          <TextField 
+            label="Add quantity..."
+            type="number"
+            id="fullWidth"
+            value={newProductQuantity} 
+            onChange={(ev) => setNewProductQuantity(ev.target.value)} 
             sx={{ flex: 1 }} 
             fullWidth
             required
