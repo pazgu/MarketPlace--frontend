@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 
 function AddProductForm() {
@@ -77,6 +78,9 @@ function AddProductForm() {
             marginBottom: '2rem' ,
             marginTop: '2rem',
           }}>
+           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Add New Product
+          </Typography>  
           <TextField 
             label="Add product name..."
             id="fullWidth"

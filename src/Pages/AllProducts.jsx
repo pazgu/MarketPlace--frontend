@@ -10,6 +10,7 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import NotFoundPage from "./NotFoundPage";
+import Pagination from '@mui/material/Pagination';
 
 function AllProducts() {
   const [products, setProducts] = useState([]);
@@ -66,9 +67,9 @@ function AllProducts() {
     setSearchParams(searchParams);
   }
 
-  function handlePagination(ev) {
-    const value = ev.target.value;
+  function handlePagination(event, value) {
     searchParams.set("page", value);
+    setCurrentPage(value);
     setSearchParams(searchParams);
   }
 
@@ -191,16 +192,15 @@ function AllProducts() {
           ))}
         </Grid>
       </Container>
-      <div>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePagination({ target: { value: index + 1 } })}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <Pagination 
+          count={totalPages} 
+          page={currentPage} 
+          onChange={handlePagination} 
+          color="secondary" 
+          shape="rounded" 
+        />
+      </Box>
     </>
   )
 }

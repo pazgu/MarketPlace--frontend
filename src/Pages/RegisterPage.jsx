@@ -45,7 +45,8 @@ const RegisterPage = () => {
         boxShadow: 3,
         borderRadius: 2,
         backgroundColor: "#fff",
-        marginTop: 3
+        marginTop: 3,
+        marginBottom: '2rem'
       }}
     >
       <Box

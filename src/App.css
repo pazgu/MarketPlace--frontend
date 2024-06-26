@@ -12,3 +12,12 @@ html, body, #root {
   .main-content {
     flex-grow: 1;
   }
+
+  .pagination.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .pagination:hover:not(.active) {
+    background-color: #ddd;
+  }
