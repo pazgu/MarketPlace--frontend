@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import axios from 'axios';
-import {useState } from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
@@ -22,22 +22,11 @@ function AddProductForm() {
       navigateBack(-1);
     }
 
-    function makeId(length) { 
-        let result = ''; 
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; 
-        const charactersLength = characters.length;
-        for (let i = 0; i < length; i++) { 
-          result += characters.charAt(Math.floor(Math.random() * charactersLength)); 
-        } 
-        return result; 
-      } 
-
     async function createNewProduct (ev) {
       if (newProductName !== "" && newProductPrice!== "" && newProductCategory !== "" && newProductQuantity >= 1){
         ev.preventDefault();
         try {
           const newProduct = {
-            _id: makeId(5),
             name: newProductName,
             price: newProductPrice,
             quantity: newProductQuantity,

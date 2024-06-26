@@ -122,7 +122,7 @@ const AllProducts =({ addToCart }) => {
       >
         Create Product
       </Button>
-      <Box sx={{ my: 1, spaceY: 2 }}>
+      <Box sx={{spaceY: 2 , bgcolor:"#F0F4F7", p: 2}}>
         <Typography variant="h6" gutterBottom>
           Filter Products
         </Typography>
@@ -152,7 +152,7 @@ const AllProducts =({ addToCart }) => {
         </Box>
         <Box>
           <TextField
-            label="Name"
+            label="Product name..."
             type="text"
             name="name"
             value={searchParams.get("name") || ""}
@@ -186,9 +186,6 @@ const AllProducts =({ addToCart }) => {
       </Box>
     </Box>
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h4" component="h2" gutterBottom>
-          Featured Products
-        </Typography>
         <Grid container spacing={4}>
           {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4}>

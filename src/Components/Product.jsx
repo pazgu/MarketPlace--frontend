@@ -1,17 +1,19 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import * as React from 'react';
 import { Link, useParams } from "react-router-dom"
 import axios from 'axios';
 import useAxios from "../Hooks/useAxios";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import {Grid, Typography} from '@mui/material';
+import TextField from '@mui/material/TextField';
+import { PRODUCTS_BASE_URL } from "../constants/url.constant";
 
 export default function Product(props) {
   const { name, price, category, quantity} = props;
   const {productId} = useParams(); 
-  const URL = `http://localhost:3000/api/products/${productId}`
+  const URL = `${PRODUCTS_BASE_URL}/${productId}`
   const { data, error, loading } = useAxios(URL);
   const navigate = useNavigate();
 
@@ -20,6 +22,7 @@ export default function Product(props) {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
 
   function goback() {
     navigate(-1);
@@ -61,11 +64,10 @@ export default function Product(props) {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(URL, {
-        ...editData,
-        _id: data._id
-      });
+      const editedProduct = {...editData, _id: data._id}
+      await axios.put(URL, editedProduct);
       setIsEditing(false);
+      setEditData(editedProduct);
     } catch (error) {
       console.error(error);
     }
@@ -89,54 +91,56 @@ export default function Product(props) {
           </>
         ) : (
           <form onSubmit={handleEditSubmit}>
-            <h1>Edit Product</h1>
-            <label>
-              Name:
-              <input
-                type="text"
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={12}>
+              <Typography variant="h5" align="center">Edit Product</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Name"
                 name="name"
                 value={editData.name}
                 onChange={handleEditChange}
                 required
               />
-            </label>
-            <br />
-            <label>
-              Price:
-              <input
-                type="text"
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Price"
                 name="price"
                 value={editData.price}
                 onChange={handleEditChange}
                 required
               />
-            </label>
-            <br />
-            <label>
-              Category:
-              <input
-                type="text"
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Category"
                 name="category"
                 value={editData.category}
                 onChange={handleEditChange}
                 required
               />
-            </label>
-            <br />
-            <label>
-              Quantity:
-              <input
-                type="text"
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Quantity"
                 name="quantity"
                 value={editData.quantity}
                 onChange={handleEditChange}
                 required
               />
-            </label>
-            <br />
-            <Button type="submit" variant="contained" color="success" style={{ margin: '5px'}}>Save</Button>
-            <Button variant="outlined" color="error" onClick={handleCancelEdit} style={{ margin: '5px' }}>Cancel</Button>
-          </form>
+            </Grid>
+            <Grid item xs={12} container justifyContent="center">
+              <Button type="submit" variant="contained" color="success" style={{ margin: '5px' }}>Save</Button>
+              <Button variant="outlined" color="error" onClick={handleCancelEdit} style={{ margin: '5px' }}>Cancel</Button>
+            </Grid>
+          </Grid>
+        </form>
         )}
       </div>
     )
