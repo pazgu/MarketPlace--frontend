@@ -11,14 +11,45 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import NotFoundPage from "./NotFoundPage";
 import Pagination from '@mui/material/Pagination';
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
-function AllProducts() {
+const AllProducts =({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [notFound, setNotFound] = useState(false);
+  const [open, setOpen] = React.useState(false); //to snackbar
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+  
    useEffect(() => {
     async function getProducts() {
       const page = searchParams.get("page") || 1;
@@ -95,7 +126,7 @@ function AllProducts() {
         <Typography variant="h6" gutterBottom>
           Filter Products
         </Typography>
-        <Box>
+        {/* <Box>
           <TextField
             label="Page"
             type="number"
@@ -105,7 +136,7 @@ function AllProducts() {
             variant="outlined"
             sx={{ mb: 2 }}
           />
-        </Box>
+        </Box> */}
         <Box>
           <FormControlLabel
             control={
@@ -183,9 +214,22 @@ function AllProducts() {
                   <Button size="small" color="primary" component={Link} to={`/products/${product._id}`}>
                     View Details
                   </Button>
-                  <Button size="small" color="secondary">
-                    Add to Cart
+                  <Button 
+                    size="small" 
+                    color="secondary" 
+                    onClick={() => {
+                      addToCart(product);
+                      handleClick();
+                    }}
+                  > Add to Cart
                   </Button>
+                  <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    message="Product added to cart"
+                    action={action}
+                  />
                 </CardActions>
               </Card>
             </Grid>

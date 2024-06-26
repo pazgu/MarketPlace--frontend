@@ -43,7 +43,8 @@ const LoginPage = () => {
         boxShadow: 3,
         borderRadius: 2,
         backgroundColor: "#fff",
-        marginTop: 3,
+        mt: 3,
+        mb:3
       }}
     >
       <form onSubmit={handleSubmit}>

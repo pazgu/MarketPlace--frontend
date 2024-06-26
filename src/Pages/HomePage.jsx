@@ -1,13 +1,43 @@
 
 import { Box, Button, Container, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PRODUCTS_BASE_URL } from "../constants/url.constant";
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 const Homepage = () => {
-
   const [products, setProducts] = useState([]);
+  const [open, setOpen] = useState(false); //to snackbar
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  
+  const action = (
+    <Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
 
   async function get2randomProducts() {
     try {
@@ -69,9 +99,16 @@ const Homepage = () => {
                   <Button size="small" color="primary" component={Link} to={`/products/${product._id}`}>
                     View Details
                   </Button>
-                  <Button size="small" color="secondary">
+                  <Button size="small" color="secondary" onClick={() => {handleClick();}}>
                     Add to Cart
                   </Button>
+                  <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    message="Product added to cart"
+                    action={action}
+                  />
                 </CardActions>
               </Card>
             </Grid>

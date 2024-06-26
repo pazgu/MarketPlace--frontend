@@ -11,19 +11,39 @@ import RegisterPage from "./Pages/RegisterPage";
 import LoginPage from "./Pages/LoginPage";
 import Footer from "./Components/Footer";
 import './App.css'
+import { useEffect, useState } from "react";
 
 function App() {
+  const [myProducts, setMyProducts] = useState(() => {
+    const savedProducts = localStorage.getItem('myProducts');
+    return savedProducts ? JSON.parse(savedProducts) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('myProducts', JSON.stringify(myProducts));
+  }, [myProducts]);
+
+  const addToCart = (product) => {
+    setMyProducts([...myProducts, product]);
+  };
+
+  const removeFromCart = (productId) => {
+    const updatedProducts = myProducts.filter((product) => product._id !== productId);
+    setMyProducts(updatedProducts);
+    localStorage.setItem('myProducts', JSON.stringify(updatedProducts)); 
+  };
+
   return (
       <div className="app-container">
         <Navbar />
         <div className="main-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="myProducts" element={<MyProducts />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="/products">
-              <Route index element={<AllProducts />} />
+              <Route index element={<AllProducts addToCart={addToCart}/>} />
+              <Route path="myProducts" element={<MyProducts myProducts={myProducts} removeFromCart={removeFromCart} setMyProducts={setMyProducts}/>} />
               <Route path=":productId" element={<ProductDetails />} />
               <Route path="create" element={<ModalAddProduct />}>
                 <Route index element={<CreateNewProduct />} />

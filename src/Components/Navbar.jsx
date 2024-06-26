@@ -29,7 +29,7 @@ const Navbar = () => {
             My Marketplace
           </Link>
         </Typography>
-        <IconButton color="inherit" component={Link} to="/myProducts">
+        <IconButton color="inherit" component={Link} to="/products/myProducts">
           <ShoppingCartIcon />
         </IconButton>
         <div>
@@ -65,7 +65,7 @@ const Navbar = () => {
               <Link to="/products" style={{ color: 'inherit', textDecoration: 'none' }}>Products</Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
-              <Link to="/myproducts" style={{ color: 'inherit', textDecoration: 'none' }}>My Products</Link>
+              <Link to="/products/myProducts" style={{ color: 'inherit', textDecoration: 'none' }}>My Products</Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Login</Link>
