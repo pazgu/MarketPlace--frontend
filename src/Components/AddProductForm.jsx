@@ -63,9 +63,8 @@ function AddProductForm() {
             flexDirection: 'column', 
             alignItems: 'center', 
             gap: 2, 
-            width: '50%', 
+            width: '100%', 
             marginBottom: '2rem' ,
-            marginTop: '2rem',
           }}>
            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Add New Product

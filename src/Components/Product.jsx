@@ -1,55 +1,28 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 import axios from 'axios';
-import useAxios from "../Hooks/useAxios";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import {Grid, Typography} from '@mui/material';
-import TextField from '@mui/material/TextField';
+import { Button, Grid, Typography, TextField } from '@mui/material';
 import { PRODUCTS_BASE_URL } from "../constants/url.constant";
 
-export default function Product(props) {
-  const { name, price, category, quantity} = props;
-  const {productId} = useParams(); 
-  const URL = `${PRODUCTS_BASE_URL}/${productId}`
-  const { data, error, loading } = useAxios(URL);
+export default function Product({ details, setDetails }) {
+  const { productId } = useParams();
+  const URL = `${PRODUCTS_BASE_URL}/${productId}`;
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: "", price: "", category: "" , quantity: ""});
+  const [editData, setEditData] = useState({ name: "", price: "", category: "", quantity: "" });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-
-  function goback() {
-    navigate(-1);
-  }
-
-  async function handleDelete() {
-    try {
-      await axios.delete(URL, productId);
-      goback();
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log("Request canceled", error.message);
-      } else if (error.response) {
-        console.log(error.request);
-      } else {
-        console.log(error);
-      }
-    }
-  }
+  if (!details) return <p>Loading...</p>;
 
   const handleEdit = () => {
     setIsEditing(true);
     setEditData({
-      name: data.name,
-      price: data.price,
-      category: data.category,
-      quantity: data.quantity
+      name: details.name,
+      price: details.price,
+      category: details.category,
+      quantity: details.quantity
     });
   };
 
@@ -64,33 +37,42 @@ export default function Product(props) {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const editedProduct = {...editData, _id: data._id}
+      const editedProduct = { ...editData, _id: details._id };
       await axios.put(URL, editedProduct);
       setIsEditing(false);
-      setEditData(editedProduct);
+      setDetails(editedProduct);
     } catch (error) {
       console.error(error);
     }
   };
+
   const handleCancelEdit = () => {
     setIsEditing(false);
   };
 
- return (
-    data && (
-      <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-        {!isEditing ? (
-          <>
-            <h1>{data.name}</h1>
-            <p>ID: {data._id}</p>
-            <p>Price: ${data.price}</p>
-            <p>Category: {data.category}</p>
-            <p>Quantity: {data.quantity}</p>
-            <Button onClick={handleEdit} variant="contained" style={{ margin: '5px'}}>Edit</Button>
-            <Button onClick={handleDelete} variant="outlined" color="error" style={{ margin: '5px'}}>Delete</Button>
-          </>
-        ) : (
-          <form onSubmit={handleEditSubmit}>
+  const handleDelete = async () => {
+    try {
+      await axios.delete(URL);
+      navigate(-1);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      {!isEditing ? (
+        <>
+          <h1>{details.name}</h1>
+          <p>ID: {details._id}</p>
+          <p>Price: ${details.price}</p>
+          <p>Category: {details.category}</p>
+          <p>Quantity: {details.quantity}</p>
+          <Button onClick={handleEdit} variant="contained" style={{ margin: '5px' }}>Edit</Button>
+          <Button onClick={handleDelete} variant="outlined" color="error" style={{ margin: '5px' }}>Delete</Button>
+        </>
+      ) : (
+        <form onSubmit={handleEditSubmit}>
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12}>
               <Typography variant="h5" align="center">Edit Product</Typography>
@@ -141,8 +123,7 @@ export default function Product(props) {
             </Grid>
           </Grid>
         </form>
-        )}
-      </div>
-    )
+      )}
+    </div>
   );
 }

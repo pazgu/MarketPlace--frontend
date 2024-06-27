@@ -21,7 +21,7 @@ const AllProducts =({ addToCart }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [notFound, setNotFound] = useState(false);
-  const [open, setOpen] = React.useState(false); //to snackbar
+  const [open, setOpen] = useState(false); //to snackbar
 
   const handleClick = () => {
     setOpen(true);
