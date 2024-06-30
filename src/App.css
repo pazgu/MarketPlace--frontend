@@ -21,3 +21,17 @@ html, body, #root {
   .pagination:hover:not(.active) {
     background-color: #ddd;
   }
+
+  .priceRange {
+    padding: 0.5rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .labelPrice {
+    display: block;
+    font-size: 0.875rem/* 14px */;
+    line-height: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }

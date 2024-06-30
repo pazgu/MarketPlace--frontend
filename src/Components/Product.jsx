@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useParams } from "react-router-dom";
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Typography, TextField } from '@mui/material';
 import { PRODUCTS_BASE_URL } from "../constants/url.constant";
@@ -12,18 +12,23 @@ export default function Product({ details, setDetails }) {
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: "", price: "", category: "", quantity: "" });
+  const [editData, setEditData] = useState({ name: "", price: "", categories: "", quantity: "" });
+
+  useEffect(() => {
+    if (details) {
+      setEditData({
+        name: details.name,
+        price: details.price,
+        categories: details.categories.join(", "), // Join array to a comma-separated string
+        quantity: details.quantity
+      });
+    }
+  }, [details]);
 
   if (!details) return <p>Loading...</p>;
 
   const handleEdit = () => {
     setIsEditing(true);
-    setEditData({
-      name: details.name,
-      price: details.price,
-      category: details.category,
-      quantity: details.quantity
-    });
   };
 
   const handleEditChange = (e) => {
@@ -37,7 +42,11 @@ export default function Product({ details, setDetails }) {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const editedProduct = { ...editData, _id: details._id };
+      const editedProduct = {
+        ...editData,
+        categories: editData.categories.split(",").map(cat => cat.trim()), // Split string back into array
+        _id: details._id
+      };
       await axios.put(URL, editedProduct);
       setIsEditing(false);
       setDetails(editedProduct);
@@ -66,7 +75,7 @@ export default function Product({ details, setDetails }) {
           <h1>{details.name}</h1>
           <p>ID: {details._id}</p>
           <p>Price: ${details.price}</p>
-          <p>Category: {details.category}</p>
+          <p>Category: {details.categories.join(", ")}</p> {/* Join array to display */}
           <p>Quantity: {details.quantity}</p>
           <Button onClick={handleEdit} variant="contained" style={{ margin: '5px' }}>Edit</Button>
           <Button onClick={handleDelete} variant="outlined" color="error" style={{ margin: '5px' }}>Delete</Button>
@@ -100,9 +109,9 @@ export default function Product({ details, setDetails }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Category"
-                name="category"
-                value={editData.category}
+                label="Categories"
+                name="categories"
+                value={editData.categories}
                 onChange={handleEditChange}
                 required
               />

@@ -10,6 +10,7 @@ import Navbar from "./Components/Navbar";
 import RegisterPage from "./Pages/RegisterPage";
 import LoginPage from "./Pages/LoginPage";
 import Footer from "./Components/Footer";
+import './index.css';
 import './App.css'
 import { useEffect, useState } from "react";
 

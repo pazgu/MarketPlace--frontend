@@ -14,6 +14,8 @@ import Pagination from '@mui/material/Pagination';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import PriceRangeSlider from "../Components/PriceRangeSlider";
+import Multiselect from "multiselect-react-dropdown";
 
 const AllProducts =({ addToCart }) => {
   const [products, setProducts] = useState([]);
@@ -22,6 +24,7 @@ const AllProducts =({ addToCart }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [notFound, setNotFound] = useState(false);
   const [open, setOpen] = useState(false); //to snackbar
+  const [allCategories, setAllCategories] = useState([]);
 
   const handleClick = () => {
     setOpen(true);
@@ -49,6 +52,7 @@ const AllProducts =({ addToCart }) => {
       </IconButton>
     </React.Fragment>
   );
+
   
    useEffect(() => {
     async function getProducts() {
@@ -59,22 +63,25 @@ const AllProducts =({ addToCart }) => {
       const options = {
         params: {
           name: searchParams.get("name"),
-          minPrice: searchParams.get("minPrice"),
-          maxPrice: searchParams.get("maxPrice"),
+          minPrice: searchParams.get("minPrice") || 0,
+          maxPrice: searchParams.get("maxPrice") || 2000,
           inStock: searchParams.get("inStock"),
           page: page,
           limit: 6,
+          categories:  searchParams.get("categories") || [],
         },
       };
+      
       try {
         const response = await axios.get(PRODUCTS_BASE_URL, options);
-        const { products, total, page, pages } = response.data;
+        const { products, total, page, pages, categories } = response.data;
         if (products.length === 0) {
           setNotFound(true); // Set notFound to true if no products found
         } else {
           setProducts(products);
           setTotalPages(pages);
           setCurrentPage(page);
+          setAllCategories(categories)
         }
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -82,6 +89,50 @@ const AllProducts =({ addToCart }) => {
     }
     getProducts();
   }, [searchParams, setSearchParams]);
+
+
+
+  //HANDLE CATEGORIES FILTERING
+
+  const categoriesOptions =
+    allCategories.map((catName) => {
+      return { name: catName };
+    }) || [];
+
+  // Initialize selectedValues, filter out empty strings
+  const initialSelectedValues = (searchParams.get("categories") || "")
+    .split(",")
+    .filter((category) => category.trim() !== "");
+
+  const [selectedValues, setSelectedValues] = useState(
+    initialSelectedValues.map((catName) => {
+      return { name: catName };
+    }) || []
+  );
+
+  const onSelect = (selectedList) => {
+    console.log("selected list:", selectedList);
+    setSelectedValues(selectedList);
+
+    searchParams.set(
+      "categories",
+      selectedList.map((item) => item.name).join(",")
+    );
+    setSearchParams(searchParams);
+    searchParams.set("page", 1);
+  };
+
+  const onRemove = (selectedList) => {
+    setSelectedValues(selectedList);
+    searchParams.set(
+      "categories",
+      selectedList.map((item) => item.name).join(",")
+    );
+    setSearchParams(searchParams);
+    searchParams.set("page", 1);
+  };
+
+
 
   function handleFilterChange(ev) {
     const inputName = ev.target.name;
@@ -126,17 +177,6 @@ const AllProducts =({ addToCart }) => {
         <Typography variant="h6" gutterBottom>
           Filter Products
         </Typography>
-        {/* <Box>
-          <TextField
-            label="Page"
-            type="number"
-            inputProps={{ min: 1 }}
-            value={searchParams.get("page") || "1"}
-            onChange={handlePagination}
-            variant="outlined"
-            sx={{ mb: 2 }}
-          />
-        </Box> */}
         <Box>
           <FormControlLabel
             control={
@@ -161,7 +201,36 @@ const AllProducts =({ addToCart }) => {
             sx={{ mb: 2, width: '100%' }}
           />
         </Box>
-        <Box>
+        <div className="m-0">
+        <label
+          htmlFor="categoriesFilter"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Category
+        </label>
+        <div id="categoriesFilter" className="">
+          <Multiselect
+            style={{
+              searchBox: {
+                border: "1px solid #D1D5DB",
+                borderRadius: "0.375rem",
+                padding: "0.5rem",
+                marginTop: "0.25rem",
+              },
+              multiselectContainer: {
+                // marginTop: "0",
+              },
+            }}
+            placeholder="Select categories (multiple)"
+            options={categoriesOptions}
+            selectedValues={selectedValues}
+            onSelect={onSelect}
+            onRemove={onRemove}
+            displayValue="name"
+          />
+        </div>
+      </div>
+        {/* <Box>
           <TextField
             label="Min Price"
             type="number"
@@ -182,7 +251,8 @@ const AllProducts =({ addToCart }) => {
             variant="outlined"
             sx={{ width: '100%' }}
           />
-        </Box>
+        </Box> */}
+        <PriceRangeSlider searchParams={searchParams} setSearchParams={setSearchParams}/>
       </Box>
     </Box>
       <Container maxWidth="lg" sx={{ py: 6 }}>
@@ -193,7 +263,7 @@ const AllProducts =({ addToCart }) => {
                 <CardMedia
                   component="img"
                   height="200"
-                  src={'https://i0.wp.com/ten-low.co.il/wp-content/uploads/2024/01/HP_LAPTOP_I7_ON_SALE.jpg?fit=1000%2C1000&ssl=1'} // Use a default image if product.image is not available
+                  src={product.image} // Use a default image if product.image is not available
                   alt={product.name}
                 />
                 <CardContent>
@@ -201,7 +271,7 @@ const AllProducts =({ addToCart }) => {
                     {product.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {product.category}
+                    {product.categories.join(", ")}
                   </Typography>
                   <Typography variant="h6" component="div" sx={{ mt: 2 }}>
                     ${product.price}
