@@ -7,9 +7,15 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import axios from "axios";
 import { AUTH_BASE_URL } from "../constants/url.constant";
+import { Fragment } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(""); 
+  const [open, setOpen] = useState(false); //to snackbar
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -17,8 +23,36 @@ const RegisterPage = () => {
     lastName: "",
   });
 
-  const handleSubmit = async(event) => {
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  
+  const action = (
+    <Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError("");
     try {
       setLoading(true);
       const newUser = {
@@ -28,13 +62,14 @@ const RegisterPage = () => {
         lastName: formData.lastName,
       };
       await axios.post(`${AUTH_BASE_URL}/register`, newUser);
+      handleClick();
     } catch (error) {
-      console.log("handling register submit",error);
       if (error.response && error.response.status === 400) {
-        console.log("User already exists. Please choose a different username.");
+        setError("User already exists. Please choose a different username.");
+      } else {
+        setError("An error occurred during registration. Please try again.");
       }
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -109,6 +144,11 @@ const RegisterPage = () => {
           fullWidth
           required
         />
+         {error && (
+          <Typography variant="body2" color="error">
+            {error}
+          </Typography>
+        )}
         <Button
           type="submit"
           variant="contained"
@@ -117,8 +157,15 @@ const RegisterPage = () => {
           fullWidth
           sx={{ height: '56px' }}
         >
-          {loading ? <CircularProgress size={24} /> : 'Register'}
         </Button>
+        {error==="" && (
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="User has been created successfuly"
+          action={action}
+        />)}
       </Box>
     </Box>
   );
