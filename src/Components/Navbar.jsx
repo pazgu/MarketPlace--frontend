@@ -1,17 +1,18 @@
-
+import { useContext, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const { loggedInUser, logout } = useContext(AuthContext);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -22,7 +23,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" style={{backgroundColor: '#013A69'}}>
+    <AppBar position="static" style={{ backgroundColor: '#013A69' }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
@@ -33,16 +34,23 @@ const Navbar = () => {
           <ShoppingCartIcon />
         </IconButton>
         <div>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={handleMenu}
-          >
-            <MenuIcon />
-          </IconButton>
+          {loggedInUser ? (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={handleMenu}
+            >
+              <Avatar alt="User Avatar" />
+            </IconButton>
+          ) : (
+            <>
+              <Link to="/login" style={{ color: 'inherit', textDecoration: 'none', marginRight: '10px' }}>Login</Link>
+              <Link to="/register" style={{ color: 'inherit', textDecoration: 'none' }}>Register</Link>
+            </>
+          )}
           <Menu
             id="menu-appbar"
             anchorEl={anchorEl}
@@ -67,12 +75,11 @@ const Navbar = () => {
             <MenuItem onClick={handleClose}>
               <Link to="/products/myProducts" style={{ color: 'inherit', textDecoration: 'none' }}>My Products</Link>
             </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Login</Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link to="/register" style={{ color: 'inherit', textDecoration: 'none' }}>Register</Link>
-            </MenuItem>
+            {loggedInUser && (
+              <MenuItem onClick={() => { handleClose(); logout(); }}>
+                Logout
+              </MenuItem>
+            )}
           </Menu>
         </div>
       </Toolbar>

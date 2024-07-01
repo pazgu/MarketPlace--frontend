@@ -11,8 +11,10 @@ import { Fragment } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); 
   const [open, setOpen] = useState(false); //to snackbar
@@ -63,6 +65,7 @@ const RegisterPage = () => {
       };
       await axios.post(`${AUTH_BASE_URL}/register`, newUser);
       handleClick();
+      navigate('/login')
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setError("User already exists. Please choose a different username.");

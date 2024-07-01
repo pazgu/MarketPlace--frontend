@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, Typography, CircularProgress} from '@mui/material';
 import { AUTH_BASE_URL } from '../constants/url.constant'; 
+import { AuthContext } from '../context/AuthContext';
+import { formatJWTTokenToUser } from '../utils/utils';
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', password: ''});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -25,6 +28,14 @@ const LoginPage = () => {
       setLoading(true);
       const response = await axios.post(`${AUTH_BASE_URL}/login`, formData);
       localStorage.setItem('token', response.data.token); // Store the JWT token
+      const { token } = response.data;
+      const user = formatJWTTokenToUser(token);
+
+      if (user) {
+        login({ ...user, token });
+      } else {
+        setError('Invalid token received');
+      }
       navigate('/'); 
     } catch (error) {
       console.log("Error during login:", error);

@@ -13,6 +13,7 @@ import Footer from "./Components/Footer";
 import './index.css';
 import './App.css'
 import { useEffect, useState } from "react";
+import AuthProvider from "./context/AuthContext";
 
 function App() {
   const [myProducts, setMyProducts] = useState(() => {
@@ -36,24 +37,26 @@ function App() {
 
   return (
       <div className="app-container">
-        <Navbar />
-        <div className="main-content">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="/products">
-              <Route index element={<AllProducts addToCart={addToCart}/>} />
-              <Route path="myProducts" element={<MyProducts myProducts={myProducts} removeFromCart={removeFromCart} setMyProducts={setMyProducts}/>} />
-              <Route path=":productId" element={<ProductDetails />} />
-              <Route path="create" element={<ModalAddProduct />}>
-                <Route index element={<CreateNewProduct />} />
+        <AuthProvider>
+          <Navbar />
+          <div className="main-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="register" element={<RegisterPage />} />
+              <Route path="/products">
+                <Route index element={<AllProducts addToCart={addToCart}/>} />
+                <Route path="myProducts" element={<MyProducts myProducts={myProducts} removeFromCart={removeFromCart} setMyProducts={setMyProducts}/>} />
+                <Route path=":productId" element={<ProductDetails />} />
+                <Route path="create" element={<ModalAddProduct />}>
+                  <Route index element={<CreateNewProduct />} />
+                </Route>
               </Route>
-            </Route>
-            <Route path="/*" element={<NotFoundPage />} />
-          </Routes>
-        </div>
-        <Footer />
+              <Route path="/*" element={<NotFoundPage />} />
+            </Routes>
+          </div>
+          <Footer />
+        </AuthProvider>
       </div>
   );
 }
