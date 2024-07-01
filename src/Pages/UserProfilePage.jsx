@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
@@ -34,7 +35,7 @@ const UserProfilePage = () => {
       <p>Welcome, {user?.username}!</p>
       <p>Name: {user?.firstName} {user?.lastName}</p>
 
-      <h2>Products Associated with You</h2>
+      {/* <h2>Products Associated with You</h2>
       {products?.length === 0 ? (
         <p>No products found.</p>
       ) : (
@@ -45,7 +46,7 @@ const UserProfilePage = () => {
             </li>
           ))}
         </ul>
-      )}
+      )} */}
     </div>
   );
 };

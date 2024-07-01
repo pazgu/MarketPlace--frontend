@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext'; 
 
 function AddProductForm() {
     const [newProductName, setNewProductName] = useState("");
@@ -17,6 +18,7 @@ function AddProductForm() {
     const [newProductCategory, setnewProductCategory] = useState("");
     const [loading, setLoading] = useState(false);
     const navigateBack = useNavigate();
+    const { loggedInUser } = useContext(AuthContext);
 
     function goBack () {
       navigateBack(-1);
@@ -25,15 +27,24 @@ function AddProductForm() {
     async function createNewProduct (ev) {
       if (newProductName !== "" && newProductPrice!== "" && newProductCategory !== "" && newProductQuantity >= 1){
         ev.preventDefault();
+        if (!loggedInUser) {
+          alert('You must be logged in to add products.');
+          return;
+        }
         try {
           const newProduct = {
             name: newProductName,
             price: newProductPrice,
             quantity: newProductQuantity,
             category: newProductCategory,
+            user: loggedInUser.userId
           };
           setLoading(true);
-          await axios.post("http://localhost:3000/api/products", newProduct);
+          await axios.post("http://localhost:3000/api/products", newProduct, {
+            headers: {
+              Authorization: `${localStorage.getItem('token')}` // Send token in request headers
+            }
+          });
           setNewProductName("");
           setNewProductPrice("");
           setNewProductQuantity(1);
