@@ -75,6 +75,9 @@ const Navbar = () => {
             <MenuItem onClick={handleClose}>
               <Link to="/products/myProducts" style={{ color: 'inherit', textDecoration: 'none' }}>My Products</Link>
             </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link to={`/users/${loggedInUser?.userId}`} style={{ color: 'inherit', textDecoration: 'none' }}>User details</Link>
+            </MenuItem>
             {loggedInUser && (
               <MenuItem onClick={() => { handleClose(); logout(); }}>
                 Logout

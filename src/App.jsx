@@ -14,6 +14,7 @@ import './index.css';
 import './App.css'
 import { useEffect, useState } from "react";
 import AuthProvider from "./context/AuthContext";
+import UserProfilePage from "./Pages/UserProfilePage";
 
 function App() {
   const [myProducts, setMyProducts] = useState(() => {
@@ -52,6 +53,7 @@ function App() {
                   <Route index element={<CreateNewProduct />} />
                 </Route>
               </Route>
+              <Route path="/users/:userId" element={<UserProfilePage/>}/>
               <Route path="/*" element={<NotFoundPage />} />
             </Routes>
           </div>
