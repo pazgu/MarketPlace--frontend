@@ -15,12 +15,12 @@ const MyProducts = ({ myProducts, removeFromCart }) => {
       ) : (
         <Grid container spacing={4} sx={{mb:2}}>
           {myProducts.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4}>
+            <Grid item key={product._id} xs={12} sm={6} md={4}>
               <Card>
-                <CardMedia
+              <CardMedia
                   component="img"
                   height="200"
-                  src={'https://i0.wp.com/ten-low.co.il/wp-content/uploads/2024/01/HP_LAPTOP_I7_ON_SALE.jpg?fit=1000%2C1000&ssl=1'} // Use a default image if product.image is not available
+                  src={product.image} // Use a default image if product.image is not available
                   alt={product.name}
                 />
                 <CardContent>

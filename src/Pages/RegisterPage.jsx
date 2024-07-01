@@ -5,6 +5,8 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
+import axios from "axios";
+import { AUTH_BASE_URL } from "../constants/url.constant";
 
 const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
@@ -15,13 +17,22 @@ const RegisterPage = () => {
     lastName: "",
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     try {
       setLoading(true);
-      console.log("Form submitted with data:", formData);
+      const newUser = {
+        username: formData.username,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+      };
+      await axios.post(`${AUTH_BASE_URL}/register`, newUser);
     } catch (error) {
-      console.log(error);
+      console.log("handling register submit",error);
+      if (error.response && error.response.status === 400) {
+        console.log("User already exists. Please choose a different username.");
+      }
     }
     finally {
       setLoading(false);

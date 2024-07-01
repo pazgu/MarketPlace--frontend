@@ -1,15 +1,13 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import useAxios from "../Hooks/useAxios"
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams, Navigate } from "react-router-dom";
 import { PRODUCTS_BASE_URL } from "../constants/url.constant";
-import Product from "../Components/Product";
 import { Box, Button, Container, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import NotFoundPage from "./NotFoundPage";
 import Pagination from '@mui/material/Pagination';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
@@ -56,7 +54,7 @@ const AllProducts =({ addToCart }) => {
   
    useEffect(() => {
     async function getProducts() {
-      const page = searchParams.get("page") || 1;
+      const page = parseInt(searchParams.get("page"), 10) || 1;
       if (page < 1) searchParams.set("page", 1);
       setSearchParams(searchParams);
 
@@ -80,7 +78,7 @@ const AllProducts =({ addToCart }) => {
         } else {
           setProducts(products);
           setTotalPages(pages);
-          setCurrentPage(page);
+          setCurrentPage(parseInt(searchParams.get("page"), 10) || 1);
           setAllCategories(categories)
         }
       } catch (error) {
@@ -230,35 +228,13 @@ const AllProducts =({ addToCart }) => {
           />
         </div>
       </div>
-        {/* <Box>
-          <TextField
-            label="Min Price"
-            type="number"
-            name="minPrice"
-            value={searchParams.get("minPrice") || 0}
-            onChange={handleFilterChange}
-            variant="outlined"
-            sx={{ mb: 2, width: '100%' }}
-          />
-        </Box>
-        <Box>
-          <TextField
-            label="Max Price"
-            type="number"
-            name="maxPrice"
-            value={searchParams.get("maxPrice") || Number.MAX_SAFE_INTEGER}
-            onChange={handleFilterChange}
-            variant="outlined"
-            sx={{ width: '100%' }}
-          />
-        </Box> */}
         <PriceRangeSlider searchParams={searchParams} setSearchParams={setSearchParams}/>
       </Box>
     </Box>
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           {products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4}>
+            <Grid item key={product._id} xs={12} sm={6} md={4}>
               <Card>
                 <CardMedia
                   component="img"

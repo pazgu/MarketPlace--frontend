@@ -69,14 +69,13 @@ const Homepage = () => {
           </Button>
         </Container>
       </Box>
-
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Featured Products
         </Typography>
         <Grid container spacing={4}>
           {products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4}>
+             <Grid item key={product._id} xs={12} sm={6} md={4}>
               <Card>
                 <CardMedia
                   component="img"
