@@ -30,7 +30,7 @@ const Navbar = () => {
             My Marketplace
           </Link>
         </Typography>
-        <IconButton color="inherit" component={Link} to="/products/myProducts">
+        <IconButton color="inherit" component={Link} to="/products/cart">
           <ShoppingCartIcon />
         </IconButton>
         <div>

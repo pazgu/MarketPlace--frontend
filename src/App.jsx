@@ -15,6 +15,7 @@ import './App.css'
 import { useEffect, useState } from "react";
 import AuthProvider from "./context/AuthContext";
 import UserProfilePage from "./Pages/UserProfilePage";
+import Cart from "./Pages/Cart";
 
 function App() {
   const [myProducts, setMyProducts] = useState(() => {
@@ -42,12 +43,13 @@ function App() {
           <Navbar />
           <div className="main-content">
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<HomePage addToCart={addToCart}/>} />
               <Route path="login" element={<LoginPage />} />
               <Route path="register" element={<RegisterPage />} />
               <Route path="/products">
                 <Route index element={<AllProducts addToCart={addToCart}/>} />
-                <Route path="myProducts" element={<MyProducts myProducts={myProducts} removeFromCart={removeFromCart} setMyProducts={setMyProducts}/>} />
+                <Route path="cart" element={<Cart myProducts={myProducts} removeFromCart={removeFromCart}/>} />
+                <Route path="myProducts" element={<MyProducts/>} />
                 <Route path=":productId" element={<ProductDetails />} />
                 <Route path="create" element={<ModalAddProduct />}>
                   <Route index element={<CreateNewProduct />} />

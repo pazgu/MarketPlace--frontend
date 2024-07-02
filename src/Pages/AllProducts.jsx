@@ -239,7 +239,7 @@ const AllProducts =({ addToCart }) => {
                 <CardMedia
                   component="img"
                   height="200"
-                  src={product.image} // Use a default image if product.image is not available
+                  src="https://i0.wp.com/ten-low.co.il/wp-content/uploads/2024/01/HP_LAPTOP_I7_ON_SALE.jpg?fit=1000%2C1000&ssl=1" // Use a default image if product.image is not available
                   alt={product.name}
                 />
                 <CardContent>

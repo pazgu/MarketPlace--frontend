@@ -46,7 +46,7 @@ const MyProducts = () => {
         My Products
       </Typography>
       {products.length === 0 ? (
-        <p>No products added to cart yet.</p>
+        <p>No products added yet.</p>
       ) : (
         <Grid container spacing={4} sx={{mb:2}}>
           {products.map((product) => (
@@ -55,7 +55,7 @@ const MyProducts = () => {
               <CardMedia
                   component="img"
                   height="200"
-                  src={product.image} // Use a default image if product.image is not available
+                  src="https://i0.wp.com/ten-low.co.il/wp-content/uploads/2024/01/HP_LAPTOP_I7_ON_SALE.jpg?fit=1000%2C1000&ssl=1"
                   alt={product.name}
                 />
                 <CardContent>
@@ -63,7 +63,7 @@ const MyProducts = () => {
                     {product.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {product.category}
+                    {product.categories.join(", ")}
                   </Typography>
                   <Typography variant="h6" component="div" sx={{ mt: 2 }}>
                     ${product.price}

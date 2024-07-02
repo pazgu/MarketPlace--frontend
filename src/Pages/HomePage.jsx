@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 import { Box, Button, Container, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
 import axios from 'axios';
@@ -8,7 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 
-const Homepage = () => {
+const Homepage = ({addToCart}) => {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false); //to snackbar
 
@@ -88,7 +89,7 @@ const Homepage = () => {
                     {product.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {product.category}
+                    {product.categories.join(", ")}
                   </Typography>
                   <Typography variant="h6" component="div" sx={{ mt: 2 }}>
                     ${product.price}
@@ -98,7 +99,7 @@ const Homepage = () => {
                   <Button size="small" color="primary" component={Link} to={`/products/${product._id}`}>
                     View Details
                   </Button>
-                  <Button size="small" color="secondary" onClick={() => {handleClick();}}>
+                  <Button size="small" color="secondary" onClick={() => {addToCart(product); handleClick();}}>
                     Add to Cart
                   </Button>
                   <Snackbar
