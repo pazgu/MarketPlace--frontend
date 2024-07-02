@@ -52,7 +52,7 @@ export default function Product({ details, setDetails }) {
         _id: details._id
       };
       await axios.put(URL, editedProduct, {headers: {
-        Authorization: `${loggedInUser.token}` 
+        Authorization: `Bearer ${loggedInUser.token}` 
     }});
       setIsEditing(false);
       setDetails(editedProduct);
@@ -68,7 +68,7 @@ export default function Product({ details, setDetails }) {
   async function handleDelete() {
     try {
       await axios.delete(URL, {headers: {
-        Authorization: `${loggedInUser.token}` 
+        Authorization: `Bearer ${loggedInUser.token}` 
     }});
       navigate(-1);
     } catch (error) {

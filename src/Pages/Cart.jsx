@@ -6,7 +6,7 @@ function Cart({ myProducts, removeFromCart}) {
   return (
     <div>
       <Typography variant="h4" component="h1" gutterBottom sx={{ my: 2, mx: 2 }}>
-        My Products
+        My Cart
       </Typography>
       {myProducts.length === 0 ? (
         <p>No products added to cart yet.</p>

@@ -45,7 +45,7 @@ function AddProductForm() {
           setLoading(true);
           await axios.post(`${PRODUCTS_BASE_URL}/create`, newProduct, {
             headers: {
-              Authorization: `${loggedInUser.token}` // Send token in request headers
+              Authorization: `Bearer ${loggedInUser.token}` // Send token in request headers
             }
           });
           setNewProductName("");

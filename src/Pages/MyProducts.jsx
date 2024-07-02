@@ -23,7 +23,7 @@ const MyProducts = () => {
         console.log('Fetching products for user:', loggedInUser);
         const response = await axios.get(`${PRODUCTS_BASE_URL}/myProducts`, {
           headers: {
-            Authorization: `${loggedInUser.token}` 
+            Authorization: `Bearer ${loggedInUser.token}` 
           }
         });
         console.log('Response:', response.data);
