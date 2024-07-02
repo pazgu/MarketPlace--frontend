@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
 import { useParams } from "react-router-dom";
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Typography, TextField } from '@mui/material';
 import { PRODUCTS_BASE_URL } from "../constants/url.constant";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Product({ details, setDetails }) {
   const { productId } = useParams();
   const URL = `${PRODUCTS_BASE_URL}/${productId}`;
   const navigate = useNavigate();
+  const { loggedInUser } = useContext(AuthContext);
+  // console.log(loggedInUser.userId);
+  // console.log(details?.user);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({ name: "", price: "", categories: "", quantity: "" });
@@ -27,19 +31,19 @@ export default function Product({ details, setDetails }) {
 
   if (!details) return <p>Loading...</p>;
 
-  const handleEdit = () => {
+  function handleEdit () {
     setIsEditing(true);
-  };
+  }
 
-  const handleEditChange = (e) => {
+ function handleEditChange(e) {
     const { name, value } = e.target;
     setEditData((prev) => ({
       ...prev,
       [name]: value
     }));
-  };
+  }
 
-  const handleEditSubmit = async (e) => {
+  async function handleEditSubmit (e) {
     e.preventDefault();
     try {
       const editedProduct = {
@@ -47,26 +51,30 @@ export default function Product({ details, setDetails }) {
         categories: editData.categories.split(",").map(cat => cat.trim()), // Split string back into array
         _id: details._id
       };
-      await axios.put(URL, editedProduct);
+      await axios.put(URL, editedProduct, {headers: {
+        Authorization: `${loggedInUser.token}` 
+    }});
       setIsEditing(false);
       setDetails(editedProduct);
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
-  const handleCancelEdit = () => {
+  function handleCancelEdit() {
     setIsEditing(false);
-  };
+  }
 
-  const handleDelete = async () => {
+  async function handleDelete() {
     try {
-      await axios.delete(URL);
+      await axios.delete(URL, {headers: {
+        Authorization: `${loggedInUser.token}` 
+    }});
       navigate(-1);
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
@@ -77,8 +85,14 @@ export default function Product({ details, setDetails }) {
           <p>Price: ${details.price}</p>
           <p>Category: {details.categories.join(", ")}</p> {/* Join array to display */}
           <p>Quantity: {details.quantity}</p>
+          
+          { loggedInUser && loggedInUser?.userId === details.user ?(
+            <div>
           <Button onClick={handleEdit} variant="contained" style={{ margin: '5px' }}>Edit</Button>
           <Button onClick={handleDelete} variant="outlined" color="error" style={{ margin: '5px' }}>Delete</Button>
+          </div>
+          ) : null}
+          
         </>
       ) : (
         <form onSubmit={handleEditSubmit}>
