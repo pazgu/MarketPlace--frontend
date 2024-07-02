@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import Product from '../Components/Product';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
-import axios from 'axios';
-import { PRODUCTS_BASE_URL } from "../constants/url.constant";
+import api from '../services/api.service';
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -11,12 +10,12 @@ function ProductDetails() {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const URL = `${PRODUCTS_BASE_URL}/${productId}`;
+  const URL = `products/${productId}`;
 
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(URL);
+        const response = await api.get(URL);
         setDetails(response.data);
         setLoading(false);
       } catch (error) {

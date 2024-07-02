@@ -6,6 +6,7 @@ import { Link} from "react-router-dom";
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { PRODUCTS_BASE_URL} from '../constants/url.constant';
+import api from '../services/api.service';
 
 const MyProducts = () => {
   const { loggedInUser } = useContext(AuthContext);
@@ -21,11 +22,7 @@ const MyProducts = () => {
 
       try {
         console.log('Fetching products for user:', loggedInUser);
-        const response = await axios.get(`${PRODUCTS_BASE_URL}/myProducts`, {
-          headers: {
-            Authorization: `Bearer ${loggedInUser.token}` 
-          }
-        });
+        const response = await api.get(`products/myProducts`);
         console.log('Response:', response.data);
         setProducts(response.data.products);
       } catch (error) {

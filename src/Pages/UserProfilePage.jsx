@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
-import { USER_BASE_URL } from '../constants/url.constant';
+import api from '../services/api.service';
 
 const UserProfilePage = () => {
   const { loggedInUser } = useContext(AuthContext);
@@ -12,7 +11,7 @@ const UserProfilePage = () => {
   useEffect(() => {
     const fetchUserProducts = async () => {
       try {
-        const response = await axios.get(`${USER_BASE_URL}/${loggedInUser.userId}`);
+        const response = await api.get(`users/${loggedInUser.userId}`);
         setProducts(response.data.products);
         setUser(response.data);
       } catch (error) {

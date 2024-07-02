@@ -1,10 +1,9 @@
 import { useContext, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, Typography, CircularProgress} from '@mui/material';
-import { AUTH_BASE_URL } from '../constants/url.constant'; 
 import { AuthContext } from '../context/AuthContext';
 import { formatJWTTokenToUser } from '../utils/utils';
+import api from '../services/api.service';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ username: '', password: ''});
@@ -26,7 +25,7 @@ const LoginPage = () => {
     setError('');
     try {
       setLoading(true);
-      const response = await axios.post(`${AUTH_BASE_URL}/login`, formData);
+      const response = await api.post("auth/login", formData);
       localStorage.setItem('token', response.data.token); // Store the JWT token
       const { token } = response.data;
       const user = formatJWTTokenToUser(token);

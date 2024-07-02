@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import PriceRangeSlider from "../Components/PriceRangeSlider";
 import Multiselect from "multiselect-react-dropdown";
+import api from "../services/api.service";
 
 const AllProducts =({ addToCart }) => {
   const [products, setProducts] = useState([]);
@@ -71,7 +72,7 @@ const AllProducts =({ addToCart }) => {
       };
       
       try {
-        const response = await axios.get(PRODUCTS_BASE_URL, options);
+        const response = await api.get("/products", options);
         const { products, total, page, pages, categories } = response.data;
         if (products.length === 0) {
           setNotFound(true); // Set notFound to true if no products found

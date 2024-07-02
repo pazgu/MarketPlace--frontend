@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import axios from 'axios';
 import { useContext, useState } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -10,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext'; 
-import { PRODUCTS_BASE_URL } from '../constants/url.constant';
+import api from '../services/api.service';
 
 function AddProductForm() {
     const [newProductName, setNewProductName] = useState("");
@@ -40,14 +39,8 @@ function AddProductForm() {
             categories: newProductCategory.split(", "),
             user: loggedInUser.userId
           };
-          console.log(newProduct.user);
-          console.log(newProduct.categories);
           setLoading(true);
-          await axios.post(`${PRODUCTS_BASE_URL}/create`, newProduct, {
-            headers: {
-              Authorization: `Bearer ${loggedInUser.token}` // Send token in request headers
-            }
-          });
+          await api.post("products/create", newProduct);
           setNewProductName("");
           setNewProductPrice("");
           setNewProductQuantity(1);

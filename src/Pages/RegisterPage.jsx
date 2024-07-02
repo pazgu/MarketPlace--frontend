@@ -5,13 +5,12 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import axios from "axios";
-import { AUTH_BASE_URL } from "../constants/url.constant";
 import { Fragment } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from "react-router-dom";
+import api from "../services/api.service";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -63,7 +62,7 @@ const RegisterPage = () => {
         firstName: formData.firstName,
         lastName: formData.lastName,
       };
-      await axios.post(`${AUTH_BASE_URL}/register`, newUser);
+      await api.post(`auth/register`, newUser);
       handleClick();
       navigate('/login')
     } catch (error) {

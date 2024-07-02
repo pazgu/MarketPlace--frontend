@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 
 import { Box, Button, Container, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
-import axios from 'axios';
 import { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PRODUCTS_BASE_URL } from "../constants/url.constant";
 import Snackbar from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import api from '../services/api.service';
 
 const Homepage = ({addToCart}) => {
   const [products, setProducts] = useState([]);
@@ -42,7 +41,7 @@ const Homepage = ({addToCart}) => {
 
   async function get2randomProducts() {
     try {
-      const response = await axios.get(`${PRODUCTS_BASE_URL}?limit=3`);
+      const response = await api.get(`/products?limit=3`);
       setProducts(response.data.products); 
     } catch (error) {
       console.error("Error fetching random products:", error);
