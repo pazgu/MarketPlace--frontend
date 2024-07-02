@@ -1,15 +1,45 @@
+/* eslint-disable react/prop-types */
 
 /* eslint-disable no-unused-vars */
-import React, { useContext, useEffect, useState } from 'react'
-import { Button, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
+import React, { Fragment, useContext, useEffect, useState } from 'react'
+import { Button, Grid, Typography, Card, CardContent, CardMedia, CardActions, IconButton} from '@mui/material';
 import { Link} from "react-router-dom";
+import CloseIcon from '@mui/icons-material/Close';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api.service';
 
-const MyProducts = () => {
+const MyProducts = ({addToCart}) => {
   const { loggedInUser } = useContext(AuthContext);
   console.log(loggedInUser);
   const [products, setProducts] = useState([]);
+  const [open, setOpen] = useState(false); //to snackbar
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  
+  const action = (
+    <Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Fragment>
+  );
 
   useEffect(() => {
     const fetchUserProducts = async () => {
@@ -68,8 +98,8 @@ const MyProducts = () => {
                   <Button size="small" color="primary" component={Link} to={`/products/${product._id}`}>
                     View Details
                   </Button>
-                  <Button size="small" color="secondary">
-                    Remove from Cart
+                  <Button size="small" color="secondary" onClick={() => {addToCart(product); handleClick();}}>
+                    Add to Cart
                   </Button>
                 </CardActions>
               </Card>

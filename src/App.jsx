@@ -49,7 +49,7 @@ function App() {
               <Route path="/products">
                 <Route index element={<AllProducts addToCart={addToCart}/>} />
                 <Route path="cart" element={<Cart myProducts={myProducts} removeFromCart={removeFromCart}/>} />
-                <Route path="myProducts" element={<MyProducts/>} />
+                <Route path="myProducts" element={<MyProducts addToCart={addToCart}/>} />
                 <Route path=":productId" element={<ProductDetails />} />
                 <Route path="create" element={<ModalAddProduct />}>
                   <Route index element={<CreateNewProduct />} />
