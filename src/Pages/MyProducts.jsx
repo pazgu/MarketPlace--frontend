@@ -5,30 +5,40 @@ import { Button, Grid, Typography, Card, CardContent, CardMedia, CardActions} fr
 import { Link} from "react-router-dom";
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
-import { USER_BASE_URL } from '../constants/url.constant';
+import { PRODUCTS_BASE_URL} from '../constants/url.constant';
 
 const MyProducts = () => {
   const { loggedInUser } = useContext(AuthContext);
+  console.log(loggedInUser);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchUserProducts = async () => {
+      if (!loggedInUser?.token) {
+        console.error('User is not logged in');
+        return;
+      }
+
       try {
-        const response = await axios.get(`${USER_BASE_URL}/${loggedInUser.userId}`);
+        console.log('Fetching products for user:', loggedInUser);
+        const response = await axios.get(`${PRODUCTS_BASE_URL}/myProducts`, {
+          headers: {
+            Authorization: `${loggedInUser.token}` 
+          }
+        });
+        console.log('Response:', response.data);
         setProducts(response.data.products);
-        console.log(products);
       } catch (error) {
         console.error('Error fetching user products:', error);
-      }
+      } 
     };
 
-    if (loggedInUser) {
-      fetchUserProducts();
-    }
+    fetchUserProducts();
   }, [loggedInUser]);
 
+
   if (!loggedInUser) {
-    return <p>Loading...</p>; 
+    return <p>You must be logged in to see your products.</p>; 
   }
   return (
     <div>

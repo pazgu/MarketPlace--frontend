@@ -10,6 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext'; 
+import { PRODUCTS_BASE_URL } from '../constants/url.constant';
 
 function AddProductForm() {
     const [newProductName, setNewProductName] = useState("");
@@ -36,13 +37,15 @@ function AddProductForm() {
             name: newProductName,
             price: newProductPrice,
             quantity: newProductQuantity,
-            category: newProductCategory,
+            categories: newProductCategory.split(", "),
             user: loggedInUser.userId
           };
+          console.log(newProduct.user);
+          console.log(newProduct.categories);
           setLoading(true);
-          await axios.post("http://localhost:3000/api/products", newProduct, {
+          await axios.post(`${PRODUCTS_BASE_URL}/create`, newProduct, {
             headers: {
-              Authorization: `${localStorage.getItem('token')}` // Send token in request headers
+              Authorization: `${loggedInUser.token}` // Send token in request headers
             }
           });
           setNewProductName("");
@@ -57,6 +60,10 @@ function AddProductForm() {
           setLoading(false);
         }
       }
+  }
+
+  if (!loggedInUser) {
+    return <p>You must be logged in to add products.</p>; 
   }
 
     return (
