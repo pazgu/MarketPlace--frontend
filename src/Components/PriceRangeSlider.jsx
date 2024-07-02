@@ -18,7 +18,7 @@ function PriceRangeSlider({ searchParams, setSearchParams }) {
 
   return (
     <div className="p-2 w-full mt-4"> {/* Added mt-4 (margin-top: 1rem) */}
-      <label className="block text-gray-700 text-sm font-bold mb-2">
+      <label className="block text-gray-700 mb-4  text-sm font-bold mb-2">
         Select Price Range:
       </label>
       <ReactSlider
@@ -48,8 +48,8 @@ function PriceRangeSlider({ searchParams, setSearchParams }) {
         }
       `}</style>
       <div className="mt-4 flex justify-between">
-        <span className="block text-sm text-gray-700">Min: ${values[0]}</span>
-        <span className="block text-sm text-gray-700">Max: ${values[1]}</span>
+        <span className="block text-sm mt-4 text-gray-700">Min: ${values[0]}</span>
+        <span className="block mt-4 text-sm text-gray-700">Max: ${values[1]}</span>
       </div>
     </div>
   );
