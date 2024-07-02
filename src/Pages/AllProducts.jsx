@@ -3,7 +3,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams, Navigate } from "react-router-dom";
-import { PRODUCTS_BASE_URL } from "../constants/url.constant";
 import { Box, Button, Container, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';

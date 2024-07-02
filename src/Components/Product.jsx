@@ -46,7 +46,8 @@ export default function Product({ details, setDetails }) {
       const editedProduct = {
         ...editData,
         categories: editData.categories.split(",").map(cat => cat.trim()), // Split string back into array
-        _id: details.user
+        _id: details._id,
+        user: details.user 
       };
       await api.put(URL, editedProduct);
       setIsEditing(false);
@@ -69,6 +70,8 @@ export default function Product({ details, setDetails }) {
     }
   }
 
+  console.log("loggedInUser" ,loggedInUser?.userId );
+  console.log(details.user);
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       {!isEditing ? (

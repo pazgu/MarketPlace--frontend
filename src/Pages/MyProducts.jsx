@@ -4,8 +4,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Button, Grid, Typography, Card, CardContent, CardMedia, CardActions} from '@mui/material';
 import { Link} from "react-router-dom";
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
-import { PRODUCTS_BASE_URL} from '../constants/url.constant';
 import api from '../services/api.service';
 
 const MyProducts = () => {
